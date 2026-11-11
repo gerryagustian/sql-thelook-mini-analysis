@@ -1,5 +1,5 @@
 -- Analisis 
--- Menampilkan karakteristik produk (nama, kategori, departemen, merk, dan harga retail)
+-- 1 Menampilkan karakteristik produk (nama, kategori, departemen, merk, dan harga retail)
 SELECT
   name,
   category,
@@ -10,8 +10,23 @@ FROM bigquery-public-data.thelook_ecommerce.products
 ORDER BY name ASC
 LIMIT 20;
 
+-- Identifikasi produk premium
+-- 2 Produk dengan retail_price di atas 100, tampilkan nama produk, kategori, merek, dan harga retail
+SELECT
+  name,
+  category,
+  brand,
+  retail_price
+FROM bigquery-public-data.thelook_ecommerce.products
+WHERE retail_price > 100
+ORDER BY retail_price DESC;
+
+-- INSIGHT:
+-- Produk dengan harga retail tertinggi adalah Alpha Industries Rip Stop Short dengan harga 999.0
+-- Produk dengan harga retail terrendah adalah Canada Goose Women's Whistler Parka dengan harga 695.0
+
 -- Evaluasi kategori produk
--- Mengetahui kategori produk dengan jumlah produk paling banyak
+-- 3 Mengetahui kategori produk dengan jumlah produk paling banyak
 SELECT
   category,
   COUNT(id) AS jumlah_produk
@@ -23,8 +38,22 @@ ORDER BY jumlah_produk DESC;
 -- Kategori dengan jumlah produk paling banyak adalah 'Intimates' dengan 2,363 produk
 -- Kategori dengan jumlah produk paling sedikit adalah 'Clothing Sets' dengan 37 produk
 
+
+-- Mengenal pelanggan dan pesanan
+-- 4 Melihat pelanggan yang melakukan pesanan
+SELECT
+  o.order_id,
+  o.status,
+  o.created_at,
+  u.first_name,
+  u.last_name
+FROM bigquery-public-data.thelook_ecommerce.orders as o
+JOIN bigquery-public-data.thelook_ecommerce.users as u
+ON o.user_id = u.id;
+
+
 -- Analisis penjualan per kategori
--- Hitung total penjualan per kategori, diurutkan dari nilai terbesar
+-- 5 Hitung total penjualan per kategori, diurutkan dari nilai terbesar
 SELECT
   p.category,
   SUM(oi.sale_price) AS total_penjualan
